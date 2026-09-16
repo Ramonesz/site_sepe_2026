@@ -630,6 +630,19 @@ em { color: var(--green); font-style: italic; }
 .rodape-marca { display: flex; flex-direction: column; align-items: flex-end; gap: 13px; color: #aeb6ab; font: 10px var(--mono); text-align: right; text-transform: uppercase; }
 .rodape-marca img { width: min(180px, 25vw); max-height: 105px; object-fit: contain; }
 
+.sobre-projeto { max-width: 1050px; min-height: calc(100svh - 175px); margin: auto; padding: 15vh 7vw 90px; }
+.sobre-projeto h1 { max-width: 850px; margin-bottom: 30px; }
+.sobre-introducao { max-width: 700px; color: #303a32; font-size: 17px; line-height: 1.7; }
+.sobre-documentos { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 36px; align-items: center; margin-top: 54px; padding: 28px; border: 1px solid var(--ink); background: #dedfd6; }
+.sobre-documentos h2,
+.sobre-resumo h2 { margin: 0 0 12px; font: 400 clamp(28px, 3vw, 42px)/.98 var(--serif); }
+.sobre-documentos p:not(.rodape-overline),
+.sobre-resumo p { max-width: 680px; margin: 0; color: #3a403c; font-size: 15px; line-height: 1.6; }
+.sobre-links-documentos { display: flex; flex-direction: column; gap: 10px; }
+.sobre-links-documentos .botao-iniciar-quiz { margin-top: 0; white-space: nowrap; text-align: center; }
+.sobre-resumo { max-width: 780px; margin-top: 54px; }
+.sobre-resumo p + p { margin-top: 16px; }
+
 .player-audio {
   position: fixed;
   z-index: 5;
@@ -732,6 +745,10 @@ em { color: var(--green); font-style: italic; }
   .cartao-musical { width: 100%; }
   .decoracao-musicas-pagina { font-size: 46px; }
   .decoracao-quiz-pagina { font-size: 56px; }
+  .sobre-projeto { min-height: auto; padding: 100px 5vw 60px; }
+  .sobre-documentos { grid-template-columns: 1fr; gap: 24px; margin-top: 38px; padding: 20px; }
+  .sobre-links-documentos { align-items: stretch; }
+  .sobre-links-documentos .botao-iniciar-quiz { white-space: normal; }
 }
 
 @media (max-width: 560px) {
