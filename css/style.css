@@ -710,6 +710,14 @@ em { color: var(--green); font-style: italic; }
 @media (max-width: 980px) {
   .grade-cartoes-musicais { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px 18px; }
   .acervo-musical { padding-inline: 4vw; }
+  .playlist-spotify { padding: 0 4vw 42px; }
+  .playlist-card { grid-template-columns: 1fr; gap: 22px; padding: 16px; }
+  .playlist-capa { width: min(100%, 230px); margin: 0 auto; }
+  .playlist-info h3 { font-size: clamp(30px, 8vw, 40px); }
+  .playlist-info p { font-size: 14px; }
+  .botao-playlist { max-width: 100%; justify-content: center; text-align: center; }
+  .playlist-qr { gap: 9px; }
+  .playlist-qr img { width: 150px; height: 150px; }
 }
 
 @media (max-width: 760px) {
@@ -724,14 +732,6 @@ em { color: var(--green); font-style: italic; }
   .cartao-musical { width: 100%; }
   .decoracao-musicas-pagina { font-size: 46px; }
   .decoracao-quiz-pagina { font-size: 56px; }
-  .playlist-spotify { padding: 0 4vw 42px; }
-  .playlist-card { grid-template-columns: 1fr; gap: 22px; padding: 16px; }
-  .playlist-capa { width: min(100%, 230px); margin: 0 auto; }
-  .playlist-info h3 { font-size: clamp(30px, 8vw, 40px); }
-  .playlist-info p { font-size: 14px; }
-  .botao-playlist { max-width: 100%; justify-content: center; text-align: center; }
-  .playlist-qr { gap: 9px; }
-  .playlist-qr img { width: 150px; height: 150px; }
 }
 
 @media (max-width: 560px) {
