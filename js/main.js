@@ -1,9 +1,9 @@
 const audio = new Audio()
-const audioEntradaSite = new Audio('../audio/efeitos sonoros/entrada-site.wav')
-const audioClique = new Audio('../audio/efeitos sonoros/clique-navegacao.wav')
-const audioRespostaCerta = new Audio('../audio/efeitos sonoros/resposta-correta.mp3')
-const audioRespostaErrada = new Audio('../audio/efeitos sonoros/resposta-incorreta.mp3')
-const audioVictory = new Audio('../audio/efeitos sonoros/victory.mp3')
+const audioEntradaSite = new Audio('../audio/efeitos sonoros/efeito-entrada-site.wav')
+const audioClique = new Audio('../audio/efeitos sonoros/efeito-clique-navegacao.wav')
+const audioRespostaCerta = new Audio('../audio/efeitos sonoros/efeito-resposta-correta.mp3')
+const audioRespostaErrada = new Audio('../audio/efeitos sonoros/efeito-resposta-incorreta.mp3')
+const audioVictory = new Audio('../audio/efeitos sonoros/efeito-vitoria.mp3')
 const botaoFechar = document.querySelector('#botao-fechar')
 const botaoPausar = document.querySelector('#botao-pausar')
 const nomeMusica = document.querySelector('#nome-musica')
@@ -14,6 +14,7 @@ const progressFill = progress?.querySelector('span')
 const volumeButtons = document.querySelectorAll('.volume-btn')
 const volumeSlider = document.querySelector('.volume-slider')
 const artePlayer = document.querySelector('.arte-player')
+let navigationTimeout
 
 audio.volume = 0.8
 
@@ -35,10 +36,19 @@ function navigateWithTransition(link) {
   } else {
     document.body.classList.add('pagina-saindo')
   }
-  window.setTimeout(() => {
+  window.clearTimeout(navigationTimeout)
+  navigationTimeout = window.setTimeout(() => {
     window.location.href = link.href
   }, isCoverLink ? 700 : 520)
 }
+
+function restorePageFromHistory() {
+  window.clearTimeout(navigationTimeout)
+  document.body.classList.remove('pagina-saindo')
+  document.querySelector('.tela-inicial')?.classList.remove('capa-saindo')
+}
+
+window.addEventListener('pageshow', restorePageFromHistory)
 
 function setupFlipCards() {
   cartoesMusicais.forEach((card) => {
@@ -166,7 +176,13 @@ function updatePlayerAtPageEnd() {
   if (!document.body.classList.contains('player-visivel')) return
 
   const atPageEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8
-  document.body.classList.toggle('player-no-final', atPageEnd)
+  const playlistSection = document.querySelector('.playlist-spotify')
+  const nearPlaylist = playlistSection && (() => {
+    const rect = playlistSection.getBoundingClientRect()
+    return rect.top <= window.innerHeight * 0.8 && rect.bottom >= 120
+  })()
+
+  document.body.classList.toggle('player-no-final', atPageEnd || nearPlaylist)
 }
 
 window.addEventListener('scroll', updatePlayerAtPageEnd, { passive: true })
@@ -455,7 +471,7 @@ function iniciarQuiz() {
 function finalizarQuiz() {
   quizJogo.hidden = true
   quizResultado.hidden = false
-  quizResultadoTitulo.textContent = `${acertosQuiz} acertos`
+  quizResultadoTitulo.textContent = `${acertosQuiz}/10 acertos`
   const mensagensResultado = [
     'Você não acertou nenhuma... Talvez seja hora de estudar um pouco mais!',
     'Pelo menos uma você acertou! Todo começo é alguma coisa.',
@@ -483,35 +499,30 @@ function soltarConfetes() {
   const container = document.createElement('div')
   container.className = 'confetes-resultado'
   const cores = ['#57b85c', '#f4c542', '#e35b4f', '#4f9fd1', '#d98ac5', '#f28c28']
-  const origem = quizResultadoTitulo?.getBoundingClientRect()
-  const origemX = origem ? origem.left + origem.width / 2 : window.innerWidth / 2
-  const origemY = origem ? origem.top + origem.height * .55 : window.innerHeight / 2
-  const alcanceLateral = Math.max(320, window.innerWidth * .48)
 
-  for (let indice = 0; indice < 36; indice += 1) {
+  for (let indice = 0; indice < 32; indice += 1) {
     const confete = document.createElement('span')
     confete.className = 'confete'
-    const direcao = Math.random() < .5 ? -1 : 1
-    const ficaNoMeio = Math.random() < .28
-    const distanciaLateral = ficaNoMeio
-      ? 10 + Math.random() * 110
-      : 100 + Math.random() * alcanceLateral
-    const distanciaSubida = origemY + 40 + Math.random() * 120
-    confete.style.setProperty('--confete-x', `${origemX}px`)
-    confete.style.setProperty('--confete-y', `${origemY}px`)
-    confete.style.setProperty('--confete-explosao-x', `${direcao * distanciaLateral}px`)
-    confete.style.setProperty('--confete-explosao-y', `${-distanciaSubida}px`)
-    confete.style.setProperty('--confete-final-x', `${direcao * (distanciaLateral + (Math.random() - .5) * 220)}px`)
+
+    const left = Math.random() * 100
+    confete.style.setProperty('--confete-x', `${left}vw`)
+    confete.style.setProperty('--confete-y', `${-30 - Math.random() * 20}px`)
     confete.style.setProperty('--confete-cor', cores[indice % cores.length])
-    confete.style.setProperty('--confete-atraso', `${Math.random() * .45}s`)
-    confete.style.setProperty('--confete-duracao', `${7 + Math.random() * 4}s`)
-    confete.style.setProperty('--confete-tamanho', `${12 + Math.random() * 10}px`)
-    confete.style.setProperty('--confete-inclinacao', `${-35 + Math.random() * 70}deg`)
+    confete.style.setProperty('--confete-atraso', `${Math.random() * 0.5}s`)
+    confete.style.setProperty('--confete-duracao', `${2.2 + Math.random() * 1.8}s`)
+    confete.style.setProperty('--confete-tamanho', `${8 + Math.random() * 14}px`)
+    confete.style.setProperty('--confete-inclinacao', `${-40 + Math.random() * 80}deg`)
+
+    const deslocamentoHorizontal = (Math.random() - 0.5) * 240
+    const deslocamentoVertical = window.innerHeight + 120
+    confete.style.setProperty('--confete-final-x', `${deslocamentoHorizontal}px`)
+    confete.style.setProperty('--confete-final-y', `${deslocamentoVertical}px`)
+
     container.appendChild(confete)
   }
 
   document.body.appendChild(container)
-  window.setTimeout(() => container.remove(), 12600)
+  window.setTimeout(() => container.remove(), 4200)
 }
 
 quizInicio?.addEventListener('click', iniciarQuiz)
